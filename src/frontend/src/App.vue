@@ -1,18 +1,17 @@
 <template>
   <div id="app">
-    <div class="main">
-      <mainPage></mainPage>
-    </div>
+    <AppLayout />
   </div>
 </template>
 
 <script>
-import mainPage from "./views/Idnex";
+import AppLayout from "@/layouts/AppLayout";
+
 export default {
   name: "App",
 
   components: {
-    mainPage,
+    AppLayout,
   },
 };
 </script>
