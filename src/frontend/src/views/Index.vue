@@ -8,12 +8,13 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
-            <div
-              v-for="(item, index) in dough"
-              :key="index"
-              class="sheet__content dough"
-            >
-              <label class="dough__input" :class="`dough__input--${item.size}`">
+            <div class="sheet__content dough">
+              <label
+                v-for="(item, index) in dough"
+                :key="index"
+                class="dough__input"
+                :class="`dough__input--${item.size}`"
+              >
                 <input
                   type="radio"
                   name="dought"
@@ -32,12 +33,10 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
-            <div
-              v-for="(item, index) in sizes"
-              :key="index"
-              class="sheet__content diameter"
-            >
+            <div class="sheet__content diameter">
               <label
+                v-for="(item, index) in sizes"
+                :key="index"
                 class="diameter__input"
                 :class="`diameter__input--${item.size}`"
               >
