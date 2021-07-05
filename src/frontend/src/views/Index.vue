@@ -9,7 +9,7 @@
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
             <div
-              v-for="(item, index) in pizza.dough"
+              v-for="(item, index) in dough"
               :key="index"
               class="sheet__content dough"
             >
@@ -78,7 +78,7 @@
 
                 <ul class="ingridients__list">
                   <li
-                    v-for="(item, index) in pizza.ingredients"
+                    v-for="(item, index) in ingredients"
                     :key="index"
                     class="ingridients__item"
                   >
@@ -153,14 +153,18 @@
 import misc from "../static/misc.json";
 import pizza from "../static/pizza.json";
 import user from "../static/user.json";
+import { findDoughType } from "../common/helpers";
+import { findIngredientsName } from "../common/helpers";
 
 export default {
-  name: "Idnex",
+  name: "Index",
 
   data() {
     return {
       misc,
       pizza,
+      dough: pizza.dough.map((item) => findDoughType(item)),
+      ingredients: pizza.ingredients.map((item) => findIngredientsName(item)),
       user,
     };
   },
