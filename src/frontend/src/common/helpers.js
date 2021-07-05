@@ -23,7 +23,7 @@ export const findSize = (itemSize) => {
   const item = SIZE.find((item) => itemSize.multiplier === item.multiplier);
   return {
     ...itemSize,
-    value: item.size,
+    size: item.size,
   };
 };
 
