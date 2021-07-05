@@ -33,13 +33,13 @@
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
             <div
-              v-for="(item, index) in pizza.sizes"
+              v-for="(item, index) in sizes"
               :key="index"
               class="sheet__content diameter"
             >
               <label
-                class="diameter__input diameter__input--small"
-                :class="`diameter__input--${decodeSize(item.multiplier)}`"
+                class="diameter__input"
+                :class="`diameter__input--${item.size}`"
               >
                 <input
                   type="radio"
@@ -64,7 +64,7 @@
                 <p>Основной соус:</p>
 
                 <label
-                  v-for="(item, index) in pizza.sauces"
+                  v-for="(item, index) in sauces"
                   :key="index"
                   class="radio ingridients__input"
                 >
@@ -155,6 +155,8 @@ import pizza from "../static/pizza.json";
 import user from "../static/user.json";
 import { findDoughType } from "../common/helpers";
 import { findIngredientsName } from "../common/helpers";
+import { findSauces } from "../common/helpers";
+import { findSize } from "../common/helpers";
 
 export default {
   name: "Index",
@@ -165,16 +167,10 @@ export default {
       pizza,
       dough: pizza.dough.map((item) => findDoughType(item)),
       ingredients: pizza.ingredients.map((item) => findIngredientsName(item)),
+      sizes: pizza.sizes.map((item) => findSize(item)),
+      sauces: pizza.sauces.map((item) => findSauces(item)),
       user,
     };
-  },
-
-  methods: {
-    decodeSize(id) {
-      if (id === 1) return "small";
-      if (id === 2) return "normal";
-      if (id === 3) return "big";
-    },
   },
 };
 </script>

@@ -26,3 +26,29 @@ export const INGREDIENTS_NAME = [
   { name: "Пармезан", alias: "parmesan" },
   { name: "Блю чиз", alias: "blue_cheese" },
 ];
+
+export const SIZE = [
+  {
+    multiplier: 1,
+    size: "small",
+  },
+  {
+    multiplier: 2,
+    size: "normal",
+  },
+  {
+    multiplier: 3,
+    size: "big",
+  },
+];
+
+export const SAUCES = [
+  {
+    name: "Томатный",
+    value: "tomato",
+  },
+  {
+    name: "Сливочный",
+    value: "creamy",
+  },
+];

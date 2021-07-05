@@ -33,13 +33,11 @@
   "sauces": [
     {
       "name": "Томатный",
-      "price": 50,
-      "value": "tomato"
+      "price": 50
     },
     {
       "name": "Сливочный",
-      "price": 50,
-      "value": "creamy"
+      "price": 50
     }
   ],
   "sizes": [
