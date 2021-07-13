@@ -2,10 +2,12 @@ export const DOUGH_TYPE = [
   {
     name: "Тонкое",
     size: "light",
+    style: "small",
   },
   {
     name: "Толстое",
     size: "large",
+    style: "big",
   },
 ];
 
@@ -52,3 +54,13 @@ export const SAUCES = [
     value: "creamy",
   },
 ];
+
+export const INGREDIENTS_IDS = {
+  dough: 1,
+  sauces: 2,
+  size: 3,
+};
+
+export const MOVE = "move";
+export const TAG_SEPARATOR = "#";
+export const DATA_TRANSFER_PAYLOAD = "payload";
