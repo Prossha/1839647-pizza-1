@@ -60,3 +60,7 @@ export const INGREDIENTS_IDS = {
   sauces: 2,
   size: 3,
 };
+
+export const MOVE = "move";
+export const TAG_SEPARATOR = "#";
+export const DATA_TRANSFER_PAYLOAD = "payload";

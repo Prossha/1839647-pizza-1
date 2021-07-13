@@ -4,8 +4,8 @@
       type="button"
       class="counter__button counter__button--minus"
       :class="{ 'counter__button--disabled': quantity <= 0 }"
-      :disabled="quantity <= 0"
-      @click="delItem"
+      :disabled="test <= 0"
+      @click="event('del')"
     >
       <span class="visually-hidden">Меньше</span>
     </button>
@@ -13,15 +13,15 @@
       type="text"
       name="counter"
       class="counter__input"
-      :value="quantity"
+      :value="test"
       readonly
     />
     <button
       type="button"
       class="counter__button counter__button--plus"
       :class="{ 'counter__button--disabled': quantity >= maxCount }"
-      :disabled="quantity >= maxCount"
-      @click="addItem"
+      :disabled="test >= maxCount"
+      @click="event('add')"
     >
       <span class="visually-hidden">Больше</span>
     </button>
@@ -49,23 +49,19 @@ export default {
     };
   },
 
+  computed: {
+    test() {
+      return this.ingredient?.quantity ?? 0;
+    },
+  },
+
   methods: {
-    addItem() {
-      this.quantity++;
-      this.event("add");
-    },
-
-    delItem() {
-      this.quantity--;
-      this.event("del");
-    },
-
     event(mode) {
-      this.$emit("setQuantity", {
+      this.$emit("selectIngredients", {
         mode: mode,
         name: this.ingredient.name,
         price: this.ingredient.price,
-        quantity: this.quantity,
+        quantity: this.ingredient.quantity,
       });
     },
   },

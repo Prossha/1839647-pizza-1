@@ -17,6 +17,7 @@ export const findIngredientsName = (ingredients) => {
   const item = INGREDIENTS_NAME.find((item) => ingredients.name === item.name);
   return {
     ...ingredients,
+    quantity: 0,
     alias: item.alias,
   };
 };

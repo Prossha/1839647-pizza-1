@@ -18,13 +18,15 @@
               v-for="(item, index) in ingredients"
               :key="index"
             >
-              <span class="filling" :class="`filling--${item.alias}`">
-                {{ item.name }}
-              </span>
+              <BaseDrag :transfer-data="item" :draggable="item.quantity < 3">
+                <span class="filling" :class="`filling--${item.alias}`">
+                  {{ item.name }}
+                </span>
+              </BaseDrag>
 
               <BaseItemCounter
                 :ingredient="item"
-                @setQuantity="setQuantity"
+                @selectIngredients="$emit('selectIngredients', $event)"
                 class="ingridients__counter"
               />
             </li>
@@ -38,7 +40,8 @@
 <script>
 import BuilderSauceSelector from "./BuilderSauceSelector";
 import BaseItemCounter from "../../common/components/BaseItemCounter";
-import { findIngredientsName, findSauces } from "../../common/helpers";
+import { findSauces } from "../../common/helpers";
+import BaseDrag from "../../common/components/BaseDrag";
 
 export default {
   name: "BuilderIngredientsSelector",
@@ -48,43 +51,21 @@ export default {
       type: Object,
       required: true,
     },
+    ingredients: {
+      required: true,
+    },
   },
 
   components: {
     BuilderSauceSelector,
     BaseItemCounter,
+    BaseDrag,
   },
 
   data() {
     return {
-      ingredients: this.pizza.ingredients.map((item) =>
-        findIngredientsName(item)
-      ),
-      ingredientsCopy: this.pizza.ingredients.map((item) =>
-        findIngredientsName(item)
-      ),
       sauces: this.pizza.sauces.map((item) => findSauces(item)),
     };
-  },
-
-  methods: {
-    setQuantity(event) {
-      const ingredient = this.ingredientsCopy.find(
-        (item) => item.name === event.name
-      );
-
-      ingredient.quantity = event.quantity;
-
-      event.mode === "add"
-        ? (ingredient.price = event.price * ingredient.quantity)
-        : (ingredient.price = ingredient.price - event.price);
-
-      const selectIngredients = this.ingredientsCopy.filter(
-        (item) => item.quantity > 0
-      );
-
-      this.$emit("selectIngredients", selectIngredients);
-    },
   },
 };
 </script>

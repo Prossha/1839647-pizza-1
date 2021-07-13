@@ -8,11 +8,13 @@
       <span class="visually-hidden">Название пиццы</span>
     </BaseInput>
 
-    <div class="content__constructor">
-      <div :class="`pizza pizza--foundation--${pizzaDough}-${pizzaSauce}`">
-        <div class="pizza__wrapper" />
+    <BaseDrop @drop="chekItem">
+      <div class="content__constructor">
+        <div :class="`pizza pizza--foundation--${pizzaDough}-${pizzaSauce}`">
+          <div class="pizza__wrapper" />
+        </div>
       </div>
-    </div>
+    </BaseDrop>
 
     <div class="content__result">
       <p>Итого: {{ pizzaPrice }} ₽</p>
@@ -26,6 +28,7 @@ import { INGREDIENTS_IDS } from "../../common/constants";
 import BaseInput from "../../common/components/BaseInput";
 import BaseButton from "../../common/components/BaseButton";
 import { pizzaIngredientElementBlock } from "../../common/helpers";
+import BaseDrop from "../../common/components/BaseDrop";
 
 export default {
   name: "BuilderPizzaView",
@@ -33,11 +36,13 @@ export default {
   components: {
     BaseInput,
     BaseButton,
+    BaseDrop,
   },
 
   data() {
     return {
       pizzaName: "",
+      dropIngredients: [],
     };
   },
 
@@ -74,6 +79,13 @@ export default {
       );
     },
 
+    pizzaSize() {
+      const size = this.pizzaComponents.find(
+        (item) => item.id === INGREDIENTS_IDS.size
+      );
+      return size?.multiplier ?? 1;
+    },
+
     pizzaComponentsPrice() {
       return this.pizzaComponents.reduce((acc, item) => {
         if (item.price) {
@@ -85,12 +97,15 @@ export default {
 
     pizzaIngredientsPrice() {
       return this.selectIngredients.reduce((acc, item) => {
-        return acc + item.price;
+        return acc + item.price * item.quantity;
       }, 0);
     },
 
     pizzaPrice() {
-      return this.pizzaComponentsPrice + this.pizzaIngredientsPrice;
+      return (
+        (this.pizzaComponentsPrice + this.pizzaIngredientsPrice) *
+        this.pizzaSize
+      );
     },
 
     selectIngredientsBlock() {
@@ -110,6 +125,17 @@ export default {
         (item) => item.id === INGREDIENTS_IDS.size
       );
       return this.pizzaName.length > 0 && dough && sauces && size;
+    },
+  },
+
+  methods: {
+    chekItem(item) {
+      this.$emit("selectIngredients", {
+        mode: "add",
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      });
     },
   },
 };

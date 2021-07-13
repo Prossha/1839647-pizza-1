@@ -13,13 +13,15 @@
 
         <BuilderIngredientsSelector
           @change="selectSauce = $event"
-          @selectIngredients="selectIngredients = $event"
+          @selectIngredients="setIngredient"
           :pizza="pizza"
+          :ingredients="ingredients"
         />
 
         <BuilderPizzaView
-          :selectIngredients="selectIngredients"
+          :selectIngredients="quantityIngredients"
           :pizzaComponents="pizzaComponents"
+          @selectIngredients="setIngredient"
         />
       </div>
     </form>
@@ -35,6 +37,7 @@ import BuilderDoughSelector from "../modules/builder/BuilderDoughSelector";
 import BuilderSizeSelector from "../modules/builder/BuilderSizeSelector";
 import BuilderIngredientsSelector from "../modules/builder/BuilderIngredientsSelector";
 import BuilderPizzaView from "../modules/builder/BuilderPizzaView";
+import { findIngredientsName } from "../common/helpers";
 
 export default {
   name: "Index",
@@ -48,6 +51,7 @@ export default {
       selectSize: {},
       selectSauce: {},
       selectIngredients: [],
+      ingredients: pizza.ingredients.map((item) => findIngredientsName(item)),
     };
   },
 
@@ -65,6 +69,27 @@ export default {
         this.selectSize,
         this.selectSauce,
       ]);
+    },
+
+    quantityIngredients() {
+      return this.ingredients.filter((item) => item.quantity > 0);
+    },
+  },
+
+  methods: {
+    selectTestIngredients(quantity, index) {
+      const ingredient = { ...this.ingredients[index], quantity };
+      this.ingredients.splice(index, 1, ingredient);
+    },
+    setIngredient(ingredient) {
+      const index = this.ingredients.findIndex(
+        (el) => ingredient.name === el.name
+      );
+      const quantity =
+        ingredient.mode === "add"
+          ? ingredient.quantity + 1
+          : ingredient.quantity - 1;
+      this.selectTestIngredients(quantity, index);
     },
   },
 };
