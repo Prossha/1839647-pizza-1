@@ -3,7 +3,8 @@
     v-on="$listeners"
     :disabled="disabled"
     :type="type"
-    :class="getClasses"
+    class="button"
+    :class="{ 'button--disabled': disabled }"
   >
     <slot></slot>
   </button>
@@ -20,11 +21,6 @@ export default {
     type: {
       type: String,
       default: "button",
-    },
-  },
-  computed: {
-    getClasses() {
-      return ["button", { "button--disabled": this.disabled }];
     },
   },
 };
