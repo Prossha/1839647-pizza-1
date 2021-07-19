@@ -52,6 +52,7 @@ export default {
       required: true,
     },
     ingredients: {
+      type: Array,
       required: true,
     },
   },

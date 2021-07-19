@@ -1,19 +1,16 @@
 <template>
-  <div>
-    <AppLayoutHeader />
-    <IndexMain />
-  </div>
+  <component :is="activeLayout">
+    <slot />
+  </component>
 </template>
 
 <script>
-import AppLayoutHeader from "./AppLayoutHeader.vue";
-import IndexMain from "../views/Index.vue";
-
 export default {
   name: "AppLayout",
-  components: {
-    AppLayoutHeader,
-    IndexMain,
+  computed: {
+    activeLayout() {
+      return () => import(`@/layouts/${this.$route.meta.layout}.vue`);
+    },
   },
 };
 </script>
