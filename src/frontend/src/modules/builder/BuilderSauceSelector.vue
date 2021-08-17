@@ -3,14 +3,14 @@
     <p>Основной соус:</p>
     <label
       class="radio ingridients__input"
-      v-for="(item, index) in sauces"
+      v-for="(item, index) in data.sauces"
       :key="index"
     >
       <input
         type="radio"
         name="sauce"
         :value="item.value"
-        @change="$emit('change', item)"
+        @change="selectSauce(item)"
       />
       <span>
         {{ item.name }}
@@ -20,13 +20,24 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from "vuex";
+
 export default {
   name: "BuilderSauceSelector",
 
-  props: {
-    sauces: {
-      type: Array,
-      required: true,
+  computed: {
+    ...mapState("Builder", {
+      data: "data",
+    }),
+  },
+
+  methods: {
+    ...mapMutations("Builder", {
+      setPizzaParam: "setPizzaParam",
+    }),
+
+    selectSauce(sauce) {
+      this.setPizzaParam({ param: "sauce", value: sauce });
     },
   },
 };

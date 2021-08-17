@@ -4,10 +4,7 @@
       <h2 class="title title--small sheet__title">Выберите ингридиенты</h2>
 
       <div class="sheet__content ingridients">
-        <BuilderSauceSelector
-          @change="$emit('change', $event)"
-          :sauces="sauces"
-        />
+        <BuilderSauceSelector />
 
         <div class="ingridients__filling">
           <p>Начинка:</p>
@@ -15,7 +12,7 @@
           <ul class="ingridients__list">
             <li
               class="ingridients__item"
-              v-for="(item, index) in ingredients"
+              v-for="(item, index) in pizza.ingredients"
               :key="index"
             >
               <BaseDrag :transfer-data="item" :draggable="item.quantity < 3">
@@ -26,7 +23,7 @@
 
               <BaseItemCounter
                 :ingredient="item"
-                @selectIngredients="$emit('selectIngredients', $event)"
+                @selectIngredients="editIngredient($event)"
                 class="ingridients__counter"
               />
             </li>
@@ -38,24 +35,13 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from "vuex";
 import BuilderSauceSelector from "./BuilderSauceSelector";
 import BaseItemCounter from "../../common/components/BaseItemCounter";
-import { findSauces } from "../../common/helpers";
 import BaseDrag from "../../common/components/BaseDrag";
 
 export default {
   name: "BuilderIngredientsSelector",
-
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
-    ingredients: {
-      type: Array,
-      required: true,
-    },
-  },
 
   components: {
     BuilderSauceSelector,
@@ -63,10 +49,23 @@ export default {
     BaseDrag,
   },
 
-  data() {
-    return {
-      sauces: this.pizza.sauces.map((item) => findSauces(item)),
-    };
+  computed: {
+    ...mapState("Builder", {
+      pizza: "pizza",
+    }),
+  },
+
+  methods: {
+    ...mapMutations("Builder", {
+      updatePizzaIngredient: "updatePizzaIngredient",
+    }),
+
+    editIngredient(ingredient) {
+      this.updatePizzaIngredient({
+        name: ingredient.name,
+        type: ingredient.mode,
+      });
+    },
   },
 };
 </script>

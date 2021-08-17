@@ -5,11 +5,11 @@
 
       <div class="sheet__content dough">
         <label
-          v-for="(item, index) in dough"
+          v-for="(item, index) in data.doughs"
           :key="index"
           class="dough__input"
           :class="`dough__input--${item.size}`"
-          @change="$emit('selectDough', item)"
+          @change="selectDough(item)"
         >
           <input
             type="radio"
@@ -26,22 +26,25 @@
 </template>
 
 <script>
-import { findDoughType } from "../../common/helpers";
+import { mapMutations, mapState } from "vuex";
 
 export default {
   name: "BuilderDoughSelector.vue",
 
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
+  computed: {
+    ...mapState("Builder", {
+      data: "data",
+    }),
   },
 
-  data() {
-    return {
-      dough: this.pizza.dough.map((item) => findDoughType(item)),
-    };
+  methods: {
+    ...mapMutations("Builder", {
+      setPizzaParam: "setPizzaParam",
+    }),
+
+    selectDough(dough) {
+      this.setPizzaParam({ param: "dough", value: dough });
+    },
   },
 };
 </script>
