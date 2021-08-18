@@ -1,10 +1,6 @@
 <template>
   <div class="content__pizza">
-    <BaseInput
-      @input="pizzaName = $event"
-      name="pizza_name"
-      placeholder="Введите название пиццы"
-    >
+    <BaseInput name="pizza_name" placeholder="Введите название пиццы">
       <span class="visually-hidden">Название пиццы</span>
     </BaseInput>
 
@@ -39,13 +35,6 @@ export default {
     BaseInput,
     BaseButton,
     BaseDrop,
-  },
-
-  data() {
-    return {
-      pizzaName: "",
-      dropIngredients: [],
-    };
   },
 
   watch: {
