@@ -8,7 +8,7 @@
       <span class="visually-hidden">Название пиццы</span>
     </BaseInput>
 
-    <BaseDrop @drop="chekItem">
+    <BaseDrop @drop="addIngredient">
       <div class="content__constructor">
         <div :class="`pizza pizza--foundation--${pizzaDough}-${pizzaSauce}`">
           <div class="pizza__wrapper" />
@@ -30,7 +30,7 @@ import BaseInput from "../../common/components/BaseInput";
 import BaseButton from "../../common/components/BaseButton";
 import { pizzaIngredientElementBlock } from "../../common/helpers";
 import BaseDrop from "../../common/components/BaseDrop";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "BuilderPizzaView",
@@ -86,12 +86,14 @@ export default {
   },
 
   methods: {
-    chekItem(item) {
-      this.$emit("selectIngredients", {
-        mode: "add",
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
+    ...mapMutations("Builder", {
+      updatePizzaIngredient: "updatePizzaIngredient",
+    }),
+
+    addIngredient({ name }) {
+      this.updatePizzaIngredient({
+        name: name,
+        type: "add",
       });
     },
   },
