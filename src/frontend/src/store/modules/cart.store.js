@@ -52,6 +52,18 @@ export default {
       state.delivery[param] = value;
     },
 
+    resetCart(state) {
+      state.pizzas = [];
+      state.delivery = {
+        type: "pickup",
+        phone: "",
+        street: "",
+        house: "",
+        flat: "",
+      };
+      state.additional = state.additional.map((el) => (el.quantity = 0));
+    },
+
     setAdditionalsIngredient(state, el) {
       console.log(el);
       state.additional.push(el);
@@ -59,7 +71,6 @@ export default {
 
     updatePizzasAndAdditionals(state, { name, type, path }) {
       const index = state[path].findIndex((el) => el.name === name);
-      console.log(index);
 
       if (~index) {
         const item = { ...state[path][index] };
