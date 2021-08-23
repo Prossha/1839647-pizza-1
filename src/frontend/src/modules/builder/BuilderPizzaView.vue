@@ -14,9 +14,7 @@
 
     <div class="content__result">
       <p>Итого: {{ pizzaPrice }} ₽</p>
-      <BaseButton :disabled="!pizzaDone">
-        <router-link to="/cart"> Готовьте! </router-link>
-      </BaseButton>
+      <BaseButton type="submit" :disabled="!pizzaDone">Готовьте!</BaseButton>
     </div>
   </div>
 </template>

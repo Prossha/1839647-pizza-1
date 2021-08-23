@@ -40,6 +40,15 @@ export const findSauces = (sauces) => {
   };
 };
 
+export const prepareAdditionals = (additionals) => {
+  return additionals.map((additional) => {
+    return {
+      ...additional,
+      quantity: 0,
+    };
+  });
+};
+
 export const pizzaIngredientElementBlock = (item) => `
 <div class="pizza__filling pizza__filling--${item}"></div>
 `;

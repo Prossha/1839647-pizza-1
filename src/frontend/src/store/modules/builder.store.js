@@ -64,7 +64,7 @@ export default {
     updatePizzaIngredient(state, { name, type }) {
       const index = state.pizza.ingredients.findIndex((el) => el.name === name);
 
-      if (index) {
+      if (~index) {
         const item = { ...state.pizza.ingredients[index] };
 
         switch (type) {
@@ -95,6 +95,22 @@ export default {
       };
       commit("setBuilderData", data);
       commit("resetPizza");
+    },
+
+    addPizza({ state, getters, commit }) {
+      commit(
+        "addEntity",
+        {
+          module: "Cart",
+          entity: "pizzas",
+          value: {
+            ...state.pizza,
+            price: getters["pizzaPrice"],
+            quantity: 1,
+          },
+        },
+        { root: true }
+      );
     },
   },
 };

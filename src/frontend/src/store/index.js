@@ -10,10 +10,19 @@ const state = () => ({});
 const actions = {
   async init({ dispatch }) {
     dispatch("Builder/initData");
+    dispatch("Cart/initData");
   },
 };
 
-const mutations = {};
+const mutations = {
+  addEntity(state, { module, entity, value }) {
+    if (module) {
+      state[module][entity] = [...state[module][entity], value];
+    } else {
+      state[entity] = [...state[entity], value];
+    }
+  },
+};
 
 export default new Vuex.Store({
   state,

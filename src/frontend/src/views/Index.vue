@@ -1,6 +1,6 @@
 <template>
   <main class="content">
-    <form action="#" method="post">
+    <form action="#" method="post" @submit.prevent="handleSubmit">
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
 
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 import misc from "../static/misc.json";
 import pizza from "../static/pizza.json";
 import user from "../static/user.json";
@@ -42,6 +44,15 @@ export default {
     BuilderSizeSelector,
     BuilderIngredientsSelector,
     BuilderPizzaView,
+  },
+
+  methods: {
+    ...mapActions("Builder", {
+      addPizza: "addPizza",
+    }),
+    handleSubmit() {
+      this.addPizza();
+    },
   },
 };
 </script>
