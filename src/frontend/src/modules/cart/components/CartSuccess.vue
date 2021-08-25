@@ -8,13 +8,26 @@
     </div>
     <p>Мы начали готовить Ваш заказ, скоро привезём его вам ;)</p>
     <div class="popup__button">
-      <router-link to="/" class="button">Отлично, я жду!</router-link>
+      <a @click="reset" class="button">Отлично, я жду!</a>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "CartSuccess",
+
+  methods: {
+    ...mapMutations("Builder", {
+      resetPizza: "resetPizza",
+    }),
+
+    reset() {
+      this.resetPizza();
+      this.$router.push("/");
+    },
+  },
 };
 </script>

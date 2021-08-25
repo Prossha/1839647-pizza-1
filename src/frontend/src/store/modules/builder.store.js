@@ -61,6 +61,14 @@ export default {
       state.pizza.name = "";
     },
 
+    updateReadyPizza(state, { name, ingredients, sauce, size, dough }) {
+      state.pizza.name = name;
+      state.pizza.ingredients = ingredients;
+      state.pizza.size = size;
+      state.pizza.sauce = sauce;
+      state.pizza.dough = dough;
+    },
+
     updatePizzaIngredient(state, { name, type }) {
       const index = state.pizza.ingredients.findIndex((el) => el.name === name);
 

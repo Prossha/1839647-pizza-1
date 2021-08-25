@@ -29,7 +29,9 @@
     </div>
 
     <div class="cart-list__button">
-      <button type="button" class="cart-list__edit">Изменить</button>
+      <button type="button" class="cart-list__edit" @click="changePizza">
+        Изменить
+      </button>
     </div>
   </li>
 </template>
@@ -54,7 +56,7 @@ export default {
     },
     filledIngredients() {
       return this.pizza.ingredients
-        .filter((el) => el.count > 0)
+        .filter((el) => el.quantity > 0)
         .map((el) => el.name.toLowerCase())
         .join(", ");
     },
@@ -68,12 +70,20 @@ export default {
       updatePizzas: "updatePizzasAndAdditionals",
     }),
 
+    ...mapMutations("Builder", {
+      updateReadyPizza: "updateReadyPizza",
+    }),
+
     set(ingredient) {
       this.updatePizzas({
         name: ingredient.name,
         type: ingredient.mode,
         path: "pizzas",
       });
+    },
+    changePizza() {
+      this.updateReadyPizza(this.pizza);
+      this.$router.push("/");
     },
   },
 };

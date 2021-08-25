@@ -1,13 +1,23 @@
 <template>
   <div class="content__pizza">
-    <BaseInput name="pizza_name" placeholder="Введите название пиццы">
+    <BaseInput
+      name="pizza_name"
+      placeholder="Введите название пиццы"
+      @inputData="setPizzaName"
+    >
       <span class="visually-hidden">Название пиццы</span>
     </BaseInput>
 
     <BaseDrop @drop="addIngredient">
       <div class="content__constructor">
         <div :class="`pizza pizza--foundation--${pizzaDough}-${pizzaSauce}`">
-          <div class="pizza__wrapper" />
+          <div class="pizza__wrapper">
+            <div
+              v-for="ingredient in selectIngredients"
+              :key="ingredient.alias"
+              :class="getIngredientClasses(ingredient)"
+            ></div>
+          </div>
         </div>
       </div>
     </BaseDrop>
@@ -22,7 +32,6 @@
 <script>
 import BaseInput from "../../common/components/BaseInput";
 import BaseButton from "../../common/components/BaseButton";
-import { pizzaIngredientElementBlock } from "../../common/helpers";
 import BaseDrop from "../../common/components/BaseDrop";
 import { mapState, mapGetters, mapMutations } from "vuex";
 
@@ -33,13 +42,6 @@ export default {
     BaseInput,
     BaseButton,
     BaseDrop,
-  },
-
-  watch: {
-    selectIngredients() {
-      document.querySelector(".pizza__wrapper").innerHTML =
-        this.selectIngredientsBlock;
-    },
   },
 
   computed: {
@@ -64,24 +66,42 @@ export default {
     pizzaSize() {
       return this.pizza.size?.multiplier ?? 1;
     },
-
-    selectIngredientsBlock() {
-      return this.selectIngredients.map((item) => {
-        return pizzaIngredientElementBlock(item.alias);
-      });
-    },
   },
 
   methods: {
     ...mapMutations("Builder", {
       updatePizzaIngredient: "updatePizzaIngredient",
+      setPizzaParam: "setPizzaParam",
     }),
+
+    getIngredientClasses({ quantity, alias }) {
+      return [
+        "pizza__filling",
+        `pizza__filling--${alias}`,
+        `${this.getQuantityClass(quantity)}`,
+      ];
+    },
 
     addIngredient({ name }) {
       this.updatePizzaIngredient({
         name: name,
         type: "add",
       });
+    },
+
+    setPizzaName(val) {
+      this.setPizzaParam({ param: "name", value: val });
+    },
+
+    getQuantityClass(count) {
+      switch (count) {
+        case 2:
+          return "pizza__filling--second";
+        case 3:
+          return "pizza__filling--third";
+        default:
+          return "";
+      }
     },
   },
 };

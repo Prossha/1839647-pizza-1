@@ -16,6 +16,7 @@
             name="diameter"
             value="small"
             class="visually-hidden"
+            :checked="isChecked(item.name)"
           />
           <span>{{ item.name }}</span>
         </label>
@@ -33,6 +34,7 @@ export default {
   computed: {
     ...mapState("Builder", {
       data: "data",
+      pizza: "pizza",
     }),
   },
 
@@ -40,6 +42,10 @@ export default {
     ...mapMutations("Builder", {
       setPizzaParam: "setPizzaParam",
     }),
+
+    isChecked(name) {
+      return name === this.pizza.size.name;
+    },
 
     selectSize(sauce) {
       this.setPizzaParam({ param: "size", value: sauce });

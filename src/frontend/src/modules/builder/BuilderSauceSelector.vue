@@ -10,6 +10,7 @@
         type="radio"
         name="sauce"
         :value="item.value"
+        :checked="isChecked(item.name)"
         @change="selectSauce(item)"
       />
       <span>
@@ -28,6 +29,7 @@ export default {
   computed: {
     ...mapState("Builder", {
       data: "data",
+      pizza: "pizza",
     }),
   },
 
@@ -35,6 +37,10 @@ export default {
     ...mapMutations("Builder", {
       setPizzaParam: "setPizzaParam",
     }),
+
+    isChecked(name) {
+      return name === this.pizza.sauce.name;
+    },
 
     selectSauce(sauce) {
       this.setPizzaParam({ param: "sauce", value: sauce });

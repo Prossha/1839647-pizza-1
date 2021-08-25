@@ -15,7 +15,8 @@
             type="radio"
             name="dought"
             class="visually-hidden"
-            :value="item.value"
+            :value="item.name"
+            :checked="isChecked(item.name)"
           />
           <b>{{ item.name }}</b>
           <span>{{ item.description }}</span>
@@ -34,6 +35,7 @@ export default {
   computed: {
     ...mapState("Builder", {
       data: "data",
+      pizza: "pizza",
     }),
   },
 
@@ -41,6 +43,10 @@ export default {
     ...mapMutations("Builder", {
       setPizzaParam: "setPizzaParam",
     }),
+
+    isChecked(name) {
+      return name === this.pizza.dough.name;
+    },
 
     selectDough(dough) {
       this.setPizzaParam({ param: "dough", value: dough });
