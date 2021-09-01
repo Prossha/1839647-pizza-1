@@ -6,7 +6,7 @@
       :name="name"
       :placeholder="placeholder"
       :required="required"
-      @input="$emit('input', $event.target.value)"
+      @input="$emit('inputData', $event.target.value)"
     />
   </label>
 </template>

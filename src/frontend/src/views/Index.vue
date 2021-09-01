@@ -1,59 +1,31 @@
 <template>
   <main class="content">
-    <form action="#" method="post">
+    <form action="#" method="post" @submit.prevent="handleSubmit">
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
 
-        <BuilderDoughSelector
-          @selectDough="selectDough = $event"
-          :pizza="pizza"
-        />
+        <BuilderDoughSelector />
 
-        <BuilderSizeSelector @selectSize="selectSize = $event" :pizza="pizza" />
+        <BuilderSizeSelector />
 
-        <BuilderIngredientsSelector
-          @change="selectSauce = $event"
-          @selectIngredients="setIngredient"
-          :pizza="pizza"
-          :ingredients="ingredients"
-        />
+        <BuilderIngredientsSelector />
 
-        <BuilderPizzaView
-          :selectIngredients="quantityIngredients"
-          :pizzaComponents="pizzaComponents"
-          @selectIngredients="setIngredient"
-        />
+        <BuilderPizzaView />
       </div>
     </form>
   </main>
 </template>
 
 <script>
-import misc from "../static/misc.json";
-import pizza from "../static/pizza.json";
-import user from "../static/user.json";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 import BuilderDoughSelector from "../modules/builder/BuilderDoughSelector";
 import BuilderSizeSelector from "../modules/builder/BuilderSizeSelector";
 import BuilderIngredientsSelector from "../modules/builder/BuilderIngredientsSelector";
 import BuilderPizzaView from "../modules/builder/BuilderPizzaView";
-import { findIngredientsName } from "../common/helpers";
 
 export default {
   name: "Index",
-
-  data() {
-    return {
-      misc,
-      pizza,
-      user,
-      selectDough: {},
-      selectSize: {},
-      selectSauce: {},
-      selectIngredients: [],
-      ingredients: pizza.ingredients.map((item) => findIngredientsName(item)),
-    };
-  },
 
   components: {
     BuilderDoughSelector,
@@ -63,33 +35,42 @@ export default {
   },
 
   computed: {
-    pizzaComponents() {
-      return Object.assign([
-        this.selectDough,
-        this.selectSize,
-        this.selectSauce,
-      ]);
-    },
+    ...mapState("Builder", {
+      pizza: "pizza",
+    }),
+    ...mapState("Cart", ["pizzas"]),
 
-    quantityIngredients() {
-      return this.ingredients.filter((item) => item.quantity > 0);
-    },
+    ...mapGetters("Builder", {
+      pizzaPrice: "pizzaPrice",
+    }),
   },
 
   methods: {
-    selectTestIngredients(quantity, index) {
-      const ingredient = { ...this.ingredients[index], quantity };
-      this.ingredients.splice(index, 1, ingredient);
-    },
-    setIngredient(ingredient) {
-      const index = this.ingredients.findIndex(
-        (el) => ingredient.name === el.name
-      );
-      const quantity =
-        ingredient.mode === "add"
-          ? ingredient.quantity + 1
-          : ingredient.quantity - 1;
-      this.selectTestIngredients(quantity, index);
+    ...mapActions("Builder", {
+      addPizza: "addPizza",
+    }),
+
+    ...mapMutations("Cart", {
+      updateReadyPizza: "updateReadyPizza",
+    }),
+
+    handleSubmit() {
+      if (this.pizzas) {
+        const hasPizza = this.pizzas.find(
+          (item) => item.name === this.pizza.name
+        );
+        this.pizza.price = this.pizzaPrice;
+        this.pizza.quantity = 1;
+        if (hasPizza) {
+          this.updateReadyPizza({
+            name: hasPizza.name,
+            item: this.pizza,
+          });
+          this.$router.push("/cart");
+        } else {
+          this.addPizza();
+        }
+      }
     },
   },
 };

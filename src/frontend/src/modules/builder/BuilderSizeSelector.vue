@@ -5,17 +5,18 @@
 
       <div class="sheet__content diameter">
         <label
-          v-for="(item, index) in sizes"
+          v-for="(item, index) in data.sizes"
           :key="index"
           class="diameter__input"
           :class="`diameter__input--${item.size}`"
-          @change="$emit('selectSize', item)"
+          @change="selectSize(item)"
         >
           <input
             type="radio"
             name="diameter"
             value="small"
             class="visually-hidden"
+            :checked="isChecked(item.name)"
           />
           <span>{{ item.name }}</span>
         </label>
@@ -25,22 +26,30 @@
 </template>
 
 <script>
-import { findSize } from "../../common/helpers";
+import { mapMutations, mapState } from "vuex";
 
 export default {
   name: "BuilderSizeSelector",
 
-  props: {
-    pizza: {
-      type: Object,
-      required: true,
-    },
+  computed: {
+    ...mapState("Builder", {
+      data: "data",
+      pizza: "pizza",
+    }),
   },
 
-  data() {
-    return {
-      sizes: this.pizza.sizes.map((item) => findSize(item)),
-    };
+  methods: {
+    ...mapMutations("Builder", {
+      setPizzaParam: "setPizzaParam",
+    }),
+
+    isChecked(name) {
+      return name === this.pizza.size.name;
+    },
+
+    selectSize(sauce) {
+      this.setPizzaParam({ param: "size", value: sauce });
+    },
   },
 };
 </script>

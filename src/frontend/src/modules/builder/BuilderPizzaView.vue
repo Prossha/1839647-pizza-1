@@ -1,143 +1,107 @@
 <template>
   <div class="content__pizza">
-    <BaseInput
-      @input="pizzaName = $event"
+    <builder-pizza-name-input
       name="pizza_name"
       placeholder="Введите название пиццы"
+      @setPizzaName="setPizzaName"
     >
       <span class="visually-hidden">Название пиццы</span>
-    </BaseInput>
+    </builder-pizza-name-input>
 
-    <BaseDrop @drop="chekItem">
+    <BaseDrop @drop="addIngredient">
       <div class="content__constructor">
         <div :class="`pizza pizza--foundation--${pizzaDough}-${pizzaSauce}`">
-          <div class="pizza__wrapper" />
+          <div class="pizza__wrapper">
+            <div
+              v-for="ingredient in selectIngredients"
+              :key="ingredient.alias"
+              :class="getIngredientClasses(ingredient)"
+            ></div>
+          </div>
         </div>
       </div>
     </BaseDrop>
 
     <div class="content__result">
       <p>Итого: {{ pizzaPrice }} ₽</p>
-      <BaseButton :disabled="!buttonStatus">
-        <router-link to="/cart"> Готовьте! </router-link>
-      </BaseButton>
+      <BaseButton type="submit" :disabled="!pizzaDone">Готовьте!</BaseButton>
     </div>
   </div>
 </template>
 
 <script>
-import { INGREDIENTS_IDS } from "../../common/constants";
-import BaseInput from "../../common/components/BaseInput";
 import BaseButton from "../../common/components/BaseButton";
-import { pizzaIngredientElementBlock } from "../../common/helpers";
 import BaseDrop from "../../common/components/BaseDrop";
+import BuilderPizzaNameInput from "./BuilderPizzaNameInput";
+import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "BuilderPizzaView",
 
   components: {
-    BaseInput,
     BaseButton,
     BaseDrop,
-  },
-
-  data() {
-    return {
-      pizzaName: "",
-      dropIngredients: [],
-    };
-  },
-
-  props: {
-    pizzaComponents: {
-      type: Array,
-      required: true,
-    },
-    selectIngredients: {
-      type: Array,
-      required: true,
-    },
-  },
-
-  watch: {
-    selectIngredients() {
-      document.querySelector(".pizza__wrapper").innerHTML =
-        this.selectIngredientsBlock;
-    },
+    BuilderPizzaNameInput,
   },
 
   computed: {
+    ...mapState("Builder", {
+      pizza: "pizza",
+    }),
+
+    ...mapGetters("Builder", {
+      pizzaPrice: "pizzaPrice",
+      pizzaDone: "pizzaDone",
+      selectIngredients: "selectedIngredients",
+    }),
+
     pizzaSauce() {
-      return (
-        this.pizzaComponents.find((item) => item.id === INGREDIENTS_IDS.sauces)
-          ?.value ?? "tomato"
-      );
+      return this.pizza.sauce?.value ?? "tomato";
     },
 
     pizzaDough() {
-      return (
-        this.pizzaComponents.find((item) => item.id === INGREDIENTS_IDS.dough)
-          ?.style ?? "big"
-      );
+      return this.pizza.dough?.style ?? "big";
     },
 
     pizzaSize() {
-      const size = this.pizzaComponents.find(
-        (item) => item.id === INGREDIENTS_IDS.size
-      );
-      return size?.multiplier ?? 1;
-    },
-
-    pizzaComponentsPrice() {
-      return this.pizzaComponents.reduce((acc, item) => {
-        if (item.price) {
-          return acc + item.price;
-        }
-        return acc;
-      }, 0);
-    },
-
-    pizzaIngredientsPrice() {
-      return this.selectIngredients.reduce((acc, item) => {
-        return acc + item.price * item.quantity;
-      }, 0);
-    },
-
-    pizzaPrice() {
-      return (
-        (this.pizzaComponentsPrice + this.pizzaIngredientsPrice) *
-        this.pizzaSize
-      );
-    },
-
-    selectIngredientsBlock() {
-      return this.selectIngredients.map((item) => {
-        return pizzaIngredientElementBlock(item.alias);
-      });
-    },
-
-    buttonStatus() {
-      const dough = this.pizzaComponents.find(
-        (item) => item.id === INGREDIENTS_IDS.dough
-      );
-      const sauces = this.pizzaComponents.find(
-        (item) => item.id === INGREDIENTS_IDS.sauces
-      );
-      const size = this.pizzaComponents.find(
-        (item) => item.id === INGREDIENTS_IDS.size
-      );
-      return this.pizzaName.length > 0 && dough && sauces && size;
+      return this.pizza.size?.multiplier ?? 1;
     },
   },
 
   methods: {
-    chekItem(item) {
-      this.$emit("selectIngredients", {
-        mode: "add",
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
+    ...mapMutations("Builder", {
+      updatePizzaIngredient: "updatePizzaIngredient",
+      setPizzaParam: "setPizzaParam",
+    }),
+
+    getIngredientClasses({ quantity, alias }) {
+      return [
+        "pizza__filling",
+        `pizza__filling--${alias}`,
+        `${this.getQuantityClass(quantity)}`,
+      ];
+    },
+
+    addIngredient({ name }) {
+      this.updatePizzaIngredient({
+        name: name,
+        type: "add",
       });
+    },
+
+    setPizzaName(val) {
+      this.setPizzaParam({ param: "name", value: val });
+    },
+
+    getQuantityClass(count) {
+      switch (count) {
+        case 2:
+          return "pizza__filling--second";
+        case 3:
+          return "pizza__filling--third";
+        default:
+          return "";
+      }
     },
   },
 };
