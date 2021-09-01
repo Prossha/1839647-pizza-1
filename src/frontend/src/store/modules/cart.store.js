@@ -69,6 +69,14 @@ export default {
       state.additional.push(el);
     },
 
+    updateReadyPizza(state, { name, item }) {
+      const index = state.pizzas.findIndex((el) => el.name === name);
+
+      if (~index) {
+        state.pizzas.splice(index, 1, item);
+      }
+    },
+
     updatePizzasAndAdditionals(state, { name, type, path }) {
       const index = state[path].findIndex((el) => el.name === name);
 

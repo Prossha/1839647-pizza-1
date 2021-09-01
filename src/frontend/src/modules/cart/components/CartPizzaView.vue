@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     getDough() {
-      return this.pizza.dough.value === "big" ? "толстом" : "тонком";
+      return this.pizza.dough.size === "light" ? "тонком" : "толстом";
     },
     filledIngredients() {
       return this.pizza.ingredients

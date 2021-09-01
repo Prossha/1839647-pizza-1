@@ -17,11 +17,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
-import misc from "../static/misc.json";
-import pizza from "../static/pizza.json";
-import user from "../static/user.json";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 import BuilderDoughSelector from "../modules/builder/BuilderDoughSelector";
 import BuilderSizeSelector from "../modules/builder/BuilderSizeSelector";
@@ -31,14 +27,6 @@ import BuilderPizzaView from "../modules/builder/BuilderPizzaView";
 export default {
   name: "Index",
 
-  data() {
-    return {
-      misc,
-      pizza,
-      user,
-    };
-  },
-
   components: {
     BuilderDoughSelector,
     BuilderSizeSelector,
@@ -46,12 +34,43 @@ export default {
     BuilderPizzaView,
   },
 
+  computed: {
+    ...mapState("Builder", {
+      pizza: "pizza",
+    }),
+    ...mapState("Cart", ["pizzas"]),
+
+    ...mapGetters("Builder", {
+      pizzaPrice: "pizzaPrice",
+    }),
+  },
+
   methods: {
     ...mapActions("Builder", {
       addPizza: "addPizza",
     }),
+
+    ...mapMutations("Cart", {
+      updateReadyPizza: "updateReadyPizza",
+    }),
+
     handleSubmit() {
-      this.addPizza();
+      if (this.pizzas) {
+        const hasPizza = this.pizzas.find(
+          (item) => item.name === this.pizza.name
+        );
+        this.pizza.price = this.pizzaPrice;
+        this.pizza.quantity = 1;
+        if (hasPizza) {
+          this.updateReadyPizza({
+            name: hasPizza.name,
+            item: this.pizza,
+          });
+          this.$router.push("/cart");
+        } else {
+          this.addPizza();
+        }
+      }
     },
   },
 };

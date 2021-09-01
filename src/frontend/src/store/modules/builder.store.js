@@ -119,6 +119,7 @@ export default {
         },
         { root: true }
       );
+      commit("resetPizza");
     },
   },
 };

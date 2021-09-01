@@ -1,12 +1,12 @@
 <template>
   <div class="content__pizza">
-    <BaseInput
+    <builder-pizza-name-input
       name="pizza_name"
       placeholder="Введите название пиццы"
-      @inputData="setPizzaName"
+      @setPizzaName="setPizzaName"
     >
       <span class="visually-hidden">Название пиццы</span>
-    </BaseInput>
+    </builder-pizza-name-input>
 
     <BaseDrop @drop="addIngredient">
       <div class="content__constructor">
@@ -30,18 +30,18 @@
 </template>
 
 <script>
-import BaseInput from "../../common/components/BaseInput";
 import BaseButton from "../../common/components/BaseButton";
 import BaseDrop from "../../common/components/BaseDrop";
+import BuilderPizzaNameInput from "./BuilderPizzaNameInput";
 import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "BuilderPizzaView",
 
   components: {
-    BaseInput,
     BaseButton,
     BaseDrop,
+    BuilderPizzaNameInput,
   },
 
   computed: {
